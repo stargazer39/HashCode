@@ -12,7 +12,7 @@ namespace HashCode
     {
         static void Main(string[] args_)
         {
-            LineReader lr = new LineReader("d_many_pizzas.in");
+            LineReader lr = new LineReader("a_example");
             StreamWriter sw = new StreamWriter("out.txt");
             string[] args = lr.Next().Split(' ');
             int[] teams = new int[4];
@@ -52,37 +52,90 @@ namespace HashCode
             }
             sw.Flush();
             sw.Close();
-            Pizza max_ingredient = null;
-            Pizza next = null;
-            int min_inter = -1;
-            for(int i = 0; i < newPizzas.Count - 1; i++)
+            //Pizza next = UniquePizza(newPizzas, newPizzas[0]);
+            List<Pizza> pizz = PizzaMaker(3, newPizzas);
+            foreach(Pizza p in pizz)
             {
-                string[] intersect = null;
-                //Console.WriteLine(String.Join(" ",union));
-                if(min_inter == -1)
-                {
-                    max_ingredient = newPizzas[i];
-                    intersect = max_ingredient.ingredients.Intersect(newPizzas[i + 1].ingredients).ToArray();
-                    min_inter = intersect.Length;
-                    //Debug.WriteLine($"inter {intersect.Length}");
-                    continue;
-                }
-                intersect = max_ingredient.ingredients.Intersect(newPizzas[i + 1].ingredients).ToArray();
-                //Debug.WriteLine($"inter {intersect.Length}");
-                if (intersect.Length < min_inter)
-                {
-                    min_inter = intersect.Length;
-                    next = newPizzas[i+1];
-                }
+                Console.WriteLine($"{p.index} {String.Join(" ", p.ingredients)}");
             }
-            Console.WriteLine($"{max_ingredient.index},{next.index} {String.Join(" ", max_ingredient.ingredients)} // {String.Join(" ", next.ingredients)}");
+            Console.WriteLine("\n");
+            Debug.WriteLine(newPizzas.Count);
+            pizz = PizzaMaker(2, newPizzas);
+            foreach (Pizza p in pizz)
+            {
+                Console.WriteLine($"{p.index} {String.Join(" ", p.ingredients)}");
+            }
+            Console.WriteLine("Done.");
+            //Console.WriteLine($"{newPizzas[0].index},{next.index} {String.Join(" ", newPizzas[0].ingredients)} // {String.Join(" ", next.ingredients)}");
             //for(int i = 0; i < newPizzas.Count())
             Console.ReadKey();
+        }
+        public static Pizza UniquePizza(List<Pizza> pizzaList,Pizza pizzaCompare)
+        {
+            int intersect_length = 0;
+            Pizza next_pizza = null;
+            int next_index = 0;
+            for(int i = 0; i <pizzaList.Count; i++)
+            {
+                string[] intersect_ingredients = pizzaList[i].ingredients.Intersect(pizzaCompare.ingredients).ToArray();
+                if(i == 0)
+                {
+                    intersect_length = intersect_ingredients.Length;
+                    continue;
+                }
+                if(intersect_length > intersect_ingredients.Length)
+                {
+                    next_pizza = pizzaList[i];
+                    next_index = i;
+                }
+            }
+            if(next_pizza == null)
+            {
+                next_pizza = pizzaList[0];
+                next_index = 0;
+            }
+            next_pizza.index_now = next_index;
+            return next_pizza;
+        }
+        public static List<Pizza> PizzaMaker(int members,List<Pizza> pizzaList)
+        {
+            List<Pizza> output = new List<Pizza>();
+            string[] uni_ingredients = null;
+            string[] uni_ingredients2 = null;
+            for (int i = 0; i < members - 1; i++)
+            {
+                if(i == 0)
+                {
+                    Pizza next = UniquePizza(pizzaList, pizzaList[0]);
+                    output.Add(pizzaList[0]);
+                    output.Add(next);
+                    pizzaList.RemoveAt(0);
+                    if(next.index_now != 0) pizzaList.RemoveAt(next.index_now - 1);
+                    continue;
+                }
+                if(i == 1)
+                {
+                    uni_ingredients = output[0].ingredients.Union(output[1].ingredients).ToArray();
+                    Pizza next = UniquePizza(pizzaList, new Pizza(-1,uni_ingredients));
+                    output.Add(next);
+                    pizzaList.RemoveAt(next.index_now);
+                    continue;
+                }
+                if(i == 2)
+                {
+                    uni_ingredients2 = uni_ingredients.Union(output[2].ingredients).ToArray();
+                    Pizza next = UniquePizza(pizzaList, new Pizza(-1, uni_ingredients2));
+                    output.Add(next);
+                    pizzaList.RemoveAt(next.index_now);
+                }
+            }
+            return output;
         }
         public class Pizza
         {
             public string[] ingredients;
             public int index;
+            public int index_now;
             public Pizza(int Index,string[] Ingredients)
             {
                 ingredients = Ingredients;
