@@ -10,10 +10,10 @@ namespace HashCode
 {
     class Program
     {
-        public static string inFile = "b_little_bit_of_everything.in";
+        public static string inFile = "c_many_ingredients.in";
         static void Main(string[] args_)
         {
-            LineReader lr = new LineReader("b_little_bit_of_everything.in");
+            LineReader lr = new LineReader(inFile);
             StreamWriter sw = new StreamWriter($"{inFile.Split('.')[0]}.out");
             string[] args = lr.Next().Split(' ');
             int[] teams = new int[3];
