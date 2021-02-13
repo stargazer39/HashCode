@@ -10,12 +10,13 @@ namespace HashCode
 {
     class Program
     {
+        public static string inFile = "b_little_bit_of_everything.in";
         static void Main(string[] args_)
         {
-            LineReader lr = new LineReader("a_example");
-            StreamWriter sw = new StreamWriter("out.txt");
+            LineReader lr = new LineReader("b_little_bit_of_everything.in");
+            StreamWriter sw = new StreamWriter($"{inFile.Split('.')[0]}.out");
             string[] args = lr.Next().Split(' ');
-            int[] teams = new int[4];
+            int[] teams = new int[3];
             int totalMembers = 0;
             int totalPizzas;
             List<Pizza> pizzas = new List<Pizza>();
@@ -35,7 +36,6 @@ namespace HashCode
                 totalMembers += (teams[i] * (i + 2));
             }
             Console.WriteLine($"Total members: {totalMembers}");
-
             string line;
             int orig_index = 0;
             while ((line = lr.Next()) != null)
@@ -45,30 +45,70 @@ namespace HashCode
                 pizzas.Add(p);
                 orig_index++;
             }
+            /// Show How many available
+            Console.WriteLine(String.Join(" ",teams));
+            if (totalMembers > pizzas.Count)
+            {
+                Console.WriteLine($"\nOnly {pizzas.Count} pizza available. ");
+            }
+            else if (totalMembers == pizzas.Count)
+            {
+                Console.WriteLine($"There's just enough pizza for everyone.");
+            }
+            else
+            {
+                Console.WriteLine($"There's more pizza ({pizzas.Count}) than members ({totalMembers}). Grate.");
+            }
+
             List<Pizza> newPizzas = pizzas.OrderByDescending(o => o.ingredients.Length).ToList();
-            foreach(Pizza p in newPizzas)
+            List<string> output = new List<string>();
+            /*foreach(Pizza p in newPizzas)
             {
                 sw.WriteLine($"{p.index} {String.Join(" ", p.ingredients)}");
             }
             sw.Flush();
+            sw.Close();*/
+
+            /// Pizza Selection Begin
+            for(int i = 2; i >= 0; i--)
+            {
+                for(int j = 0; j < teams[i]; j++)
+                {
+                    if (newPizzas.Count < i + 2) break;
+                    string tmp;
+                    tmp = $"{i + 2} ";
+                    //sw.Write($"{i+2} ");
+                    List<Pizza> pizz = PizzaMaker(i+2, newPizzas);
+                    foreach (Pizza p in pizz)
+                    {
+                        //sw.Write($"{p.index} ");
+                        tmp += $"{p.index} ";
+                        Console.WriteLine($"{p.index} {String.Join(" ", p.ingredients)}");
+                    }
+                    output.Add(tmp);
+                    //sw.Write("\n");
+                    Console.WriteLine("\n");
+                }
+            }
+            sw.WriteLine(output.Count);
+            foreach(string str in output)
+            {
+                sw.WriteLine(str);
+            }
+            sw.Flush();
             sw.Close();
-            //Pizza next = UniquePizza(newPizzas, newPizzas[0]);
-            List<Pizza> pizz = PizzaMaker(3, newPizzas);
-            foreach(Pizza p in pizz)
-            {
-                Console.WriteLine($"{p.index} {String.Join(" ", p.ingredients)}");
-            }
-            Console.WriteLine("\n");
-            Debug.WriteLine(newPizzas.Count);
-            pizz = PizzaMaker(2, newPizzas);
-            foreach (Pizza p in pizz)
-            {
-                Console.WriteLine($"{p.index} {String.Join(" ", p.ingredients)}");
-            }
+
+            /* Console.WriteLine("\n");
+             Debug.WriteLine(newPizzas.Count);
+             pizz = PizzaMaker(2, newPizzas);
+             foreach (Pizza p in pizz)
+             {
+                 Console.WriteLine($"{p.index} {String.Join(" ", p.ingredients)}");
+             }*/
             Console.WriteLine("Done.");
             //Console.WriteLine($"{newPizzas[0].index},{next.index} {String.Join(" ", newPizzas[0].ingredients)} // {String.Join(" ", next.ingredients)}");
             //for(int i = 0; i < newPizzas.Count())
-            Console.ReadKey();
+            Console.ReadLine();
         }
         public static Pizza UniquePizza(List<Pizza> pizzaList,Pizza pizzaCompare)
         {
@@ -87,6 +127,7 @@ namespace HashCode
                 {
                     next_pizza = pizzaList[i];
                     next_index = i;
+                    if (intersect_ingredients.Length == 0) break;
                 }
             }
             if(next_pizza == null)
