@@ -5,16 +5,19 @@
 #define MAX_PIZZA 100000
 #define MAX_ING 10000
 
+//Structure of a pizza
 typedef struct {
     int index;
     int ing_length;
     char ingredients[MAX_ING][20];
 }piz;
-//piz sortPizzas()
+
 void sortPizza (piz * orig,piz * sorted_pizza[],int len);
 int main()
 {
+    //New pizza struct
     piz * pizza;
+    //Allocate memory to it (MaX_PIZZA * (size of one pizza stucture)
     pizza = malloc(MAX_PIZZA * sizeof(piz));
     if(pizza == NULL){
         printf("Memory allocation faild. (pizzza)");
@@ -22,8 +25,8 @@ int main()
     //Open the file
     FILE *fptr;
     FILE *fptr2;
-    fptr = fopen("b_little_bit_of_everything.in","r");
-    fptr2 = fopen("b_little_bit_of_everything.out","w");
+    fptr = fopen("c_many_ingredients.in","r");
+    fptr2 = fopen("c_many_ingredients.out","w");
     //Check if file is open
     if(fptr == NULL || fptr2 == NULL){
         printf("File couldn't be opened");
@@ -59,6 +62,7 @@ int main()
     piz * sorted_pizza[MAX_PIZZA];
     sortPizza(pizza,sorted_pizza,f_index);
 
+    //Print everything to a file
     for(int i = 0; i<f_index; i++){
         int tmp_length = sorted_pizza[i]->ing_length;
         fprintf(fptr2,"%d ",tmp_length);
@@ -72,8 +76,10 @@ int main()
     getchar();
     return 0;
 }
+//Pizza sorting by Ingredients.
 void sortPizza (piz * orig,piz * sorted_pizza[],int len)
 {
+    //Get the maximum value
     int max = 0;
     for(int i = 0; i < len; i++){
         if(max < orig[i].ing_length){
@@ -81,6 +87,7 @@ void sortPizza (piz * orig,piz * sorted_pizza[],int len)
         }
     }
     printf("\n max : %d\n",max);
+    //Decrease value of max and get all structs in order (to a pointer array)
     int i = 0;
     for(int k = max; k >= 0; k--){
         for(int j = 0; j < len; j++){
