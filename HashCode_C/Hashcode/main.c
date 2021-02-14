@@ -13,6 +13,7 @@ typedef struct {
 }piz;
 
 void sortPizza (piz * orig,piz * sorted_pizza[],int len);
+int getIntersect (char * a1, char * a2);
 int main()
 {
     //New pizza struct
@@ -26,7 +27,7 @@ int main()
     FILE *fptr;
     FILE *fptr2;
     fptr = fopen("c_many_ingredients.in","r");
-    fptr2 = fopen("c_many_ingredients.out","w");
+    fptr2 = fopen("c_many_ingredients.sorted.out","w");
     //Check if file is open
     if(fptr == NULL || fptr2 == NULL){
         printf("File couldn't be opened");
@@ -101,3 +102,22 @@ void sortPizza (piz * orig,piz * sorted_pizza[],int len)
     printf("done");
     //return new_pizza;
 }
+int getIntersect (char * ar1, char * ar2,int x,int y){
+    int intersect = 0;
+    printf("%d %s %d %d\n",x,(ar1+0*y),strlen((ar1+0*y)),strcmp((ar1+1*y),(ar2+0*y)));
+    for(int i = 0; i < x; i++){
+        if(strlen((ar1+0*y)) == 0){
+            break;
+        }
+        for(int j = 0; j < x; j++){
+            if(strlen((ar2+j*y)) == 0){
+                break;
+            }
+            if(strcmp((ar1+i*y),(ar2+j*y)) == 0){
+                intersect++;
+                break;
+            }
+        }
+    }
+    return intersect;
+};
