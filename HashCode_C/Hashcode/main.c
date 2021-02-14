@@ -2,17 +2,23 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MAX_PIZZA 100000
+#define MAX_ING 10000
+
 typedef struct {
     int index;
     int ing_length;
-    char ingredients[10000][20];
+    char ingredients[MAX_ING][20];
 }piz;
 //piz sortPizzas()
+void sortPizza (piz * orig,piz * sorted_pizza[],int len);
 int main()
 {
-    piz *pizza;
-    pizza = malloc(100000 * sizeof(piz));
-
+    piz * pizza;
+    pizza = malloc(MAX_PIZZA * sizeof(piz));
+    if(pizza == NULL){
+        printf("Memory allocation faild. (pizzza)");
+    }
     //Open the file
     FILE *fptr;
     fptr = fopen("b_little_bit_of_everything.in","r");
@@ -42,23 +48,42 @@ int main()
         }
         pizza[f_index].index = f_index;
         pizza[f_index].ing_length = ing_amount;
-        //(fptr,"%d %s",&next,&next2);
-        //fgets(next2,100,fptr);
-        //break;
         f_index++;
     }
-    //printf("%d",f_args[0]);
     for(int i = 0; i < 4; i++){
         printf("%d ",f_args[i]);
     }
-    //printf("\n%d %s\n",next,next2);
-    //strcpy(pizza[0].ingredients[0], "lol");
-    //strcpy(pizza[0].ingredients[1], "lol2");
-    //printf("\n%d %s %s %s %s",pizza[0].ing_length,pizza[0].ingredients[0],pizza[0].ingredients[1],pizza[0].ingredients[2],pizza[0].ingredients[3]);
+
+    //Sort pizza
+    piz * sorted_pizza[MAX_PIZZA];
+    sortPizza(pizza,sorted_pizza,f_index);
+
     for(int i = 0; i<f_index; i++){
-        printf("\n%s",pizza[i].ingredients[0]);
+        printf("\n%d",sorted_pizza[i]->ing_length);
     }
     printf("\n%d",f_index);
     getchar();
     return 0;
+}
+void sortPizza (piz * orig,piz * sorted_pizza[],int len)
+{
+    int max = 0;
+    for(int i = 0; i < len; i++){
+        if(max < orig[i].ing_length){
+            max = orig[i].ing_length;
+        }
+    }
+    printf("\n max : %d\n",max);
+    int i = 0;
+    for(int k = max; k >= 0; k--){
+        for(int j = 0; j < len; j++){
+            if(orig[j].ing_length == k){
+                sorted_pizza[i] = &orig[j];
+                i++;
+                //printf("%d",orig[j].ing_length);
+            }
+        }
+    }
+    printf("done");
+    //return new_pizza;
 }
