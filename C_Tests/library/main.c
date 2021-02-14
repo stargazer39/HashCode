@@ -4,16 +4,16 @@
 
 int getIntersect (char * ar1, char * ar2,int x,int y){
     int intersect = 0;
-    printf("%d %s %d %d\n",x,(ar1+0*x),strlen((ar1+0*x)),strcmp((ar1+1*x),(ar2+0*x)));
+    printf("%d %s %d %d\n",x,(ar1+0*y),strlen((ar1+0*y)),strcmp((ar1+1*y),(ar2+0*y)));
     for(int i = 0; i < x; i++){
-        if(strlen((ar1+0*x)) == 0){
+        if(strlen((ar1+0*y)) == 0){
             break;
         }
         for(int j = 0; j < x; j++){
-            if(strlen((ar2+j*x)) == 0){
+            if(strlen((ar2+j*y)) == 0){
                 break;
             }
-            if(strcmp((ar1+i*x),(ar2+j*x)) == 0){
+            if(strcmp((ar1+i*y),(ar2+j*y)) == 0){
                 intersect++;
                 break;
             }

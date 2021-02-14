@@ -13,7 +13,7 @@ typedef struct {
 }piz;
 
 void sortPizza (piz * orig,piz * sorted_pizza[],int len);
-int getIntersect (char * a1, char * a2);
+int getIntersect (char * ar1, char * ar2,int x,int y);
 int main()
 {
     //New pizza struct
@@ -26,8 +26,8 @@ int main()
     //Open the file
     FILE *fptr;
     FILE *fptr2;
-    fptr = fopen("c_many_ingredients.in","r");
-    fptr2 = fopen("c_many_ingredients.sorted.out","w");
+    fptr = fopen("ex0.in","r");
+    fptr2 = fopen("ex0.sorted.out","w");
     //Check if file is open
     if(fptr == NULL || fptr2 == NULL){
         printf("File couldn't be opened");
@@ -71,9 +71,14 @@ int main()
             fprintf(fptr2,"%s ",sorted_pizza[i]->ingredients[j]);
         }
         fprintf(fptr2,"\n");
-        printf("\n%d",sorted_pizza[i]->ing_length);
+        //printf("\n%d",sorted_pizza[i]->ing_length);
     }
     printf("\n%d",f_index);
+
+    printf("inter %d",getIntersect((char *)pizza[0].ingredients,(char *)sorted_pizza[0]->ingredients,MAX_ING,20));
+
+    fclose(fptr2);
+    fclose(fptr);
     getchar();
     return 0;
 }
@@ -104,7 +109,7 @@ void sortPizza (piz * orig,piz * sorted_pizza[],int len)
 }
 int getIntersect (char * ar1, char * ar2,int x,int y){
     int intersect = 0;
-    printf("%d %s %d %d\n",x,(ar1+0*y),strlen((ar1+0*y)),strcmp((ar1+1*y),(ar2+0*y)));
+    printf("debug %d %s %d %d\n",x,(ar1+0*y),strlen((ar1+0*y)),strcmp((ar1+1*y),(ar2+0*y)));
     for(int i = 0; i < x; i++){
         if(strlen((ar1+0*y)) == 0){
             break;
