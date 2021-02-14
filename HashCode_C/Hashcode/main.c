@@ -21,10 +21,11 @@ int main()
     }
     //Open the file
     FILE *fptr;
+    FILE *fptr2;
     fptr = fopen("b_little_bit_of_everything.in","r");
-
+    fptr2 = fopen("b_little_bit_of_everything.out","w");
     //Check if file is open
-    if(fptr == NULL){
+    if(fptr == NULL || fptr2 == NULL){
         printf("File couldn't be opened");
         return -1;
     }
@@ -59,6 +60,12 @@ int main()
     sortPizza(pizza,sorted_pizza,f_index);
 
     for(int i = 0; i<f_index; i++){
+        int tmp_length = sorted_pizza[i]->ing_length;
+        fprintf(fptr2,"%d ",tmp_length);
+        for(int j = 0; j<tmp_length; j++){
+            fprintf(fptr2,"%s ",sorted_pizza[i]->ingredients[j]);
+        }
+        fprintf(fptr2,"\n");
         printf("\n%d",sorted_pizza[i]->ing_length);
     }
     printf("\n%d",f_index);
