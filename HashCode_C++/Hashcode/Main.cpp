@@ -39,6 +39,7 @@ public:
 int toInt(string s);
 int wordLength(string s);
 int getIntersect(string s1[], string s2[], int len1, int len2);
+string* arrayConcat(string s1[], string s2[], int len1, int len2);
 int main() {
 	cout << "Started" << endl;
 	ifstream TestFile("d_many_pizzas.in");
@@ -70,7 +71,7 @@ int main() {
 			ingredients[j] = s.getNextStr();
 			//cout << ingredients[j] + " ";
 		}
-		Pizza p(ingredients,len, ing);
+		Pizza p(ingredients, len, ing);
 		pizzaVector.push_back(p);
 		index++;
 		//cout << ing << " " << len << endl;
@@ -101,6 +102,12 @@ int main() {
 	string a1[] = { "lol","num","sex" };
 	string a2[] = { "lol","nul","num" };
 
+	string* tot = arrayConcat(pizzaVector[pizzaArray[0]].ings, pizzaVector[pizzaArray[1]].ings, pizzaVector[pizzaArray[0]].length, pizzaVector[pizzaArray[1]].length);
+	for (int i = 0; i < pizzaVector[pizzaArray[0]].length + pizzaVector[pizzaArray[1]].length; i++) {
+		cout << tot[i] + " ";
+	}
+	cout << tot->length();
+	cout << endl;
 	cout << getIntersect(pizzaVector[pizzaArray[1]].ings, pizzaVector[pizzaArray[0]].ings, pizzaVector[pizzaArray[1]].length, pizzaVector[pizzaArray[0]].length) << endl;
 	/*TestFile.clear();
 	cout << "\n\n";
@@ -111,6 +118,7 @@ int main() {
 	}*/
 }
 
+//Cast string to int
 int toInt(string s) {
 	stringstream ss(s);
 	int i;
@@ -118,6 +126,7 @@ int toInt(string s) {
 	return i;
 }
 
+//Get count of words in a line
 int wordLength(string s) {
 	int count = 0;
 	for (int i = 0; i < s.length(); i++) {
@@ -128,6 +137,7 @@ int wordLength(string s) {
 	return count;
 }
 
+//Get intersect of two string arrays
 int getIntersect(string s1[], string s2[], int len1, int len2) {
 	int count = 0;
 	for (int i = 0; i < len1; i++) {
@@ -141,4 +151,16 @@ int getIntersect(string s1[], string s2[], int len1, int len2) {
 		}
 	}
 	return count;
+}
+
+string* arrayConcat(string s1[], string s2[], int len1, int len2) {
+	string* tot = new string[len1 + len2];
+	int i, j;
+	for (i = 0; i < len1; i++) {
+		tot[i] = s1[i];
+	}
+	for (j = 0; j < len2; j++) {
+		tot[i + j] = s2[j];
+	}
+	return tot;
 }
