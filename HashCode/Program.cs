@@ -40,11 +40,13 @@ namespace HashCode
         private static bool debug = false;
         static void Main(string[] args_)
         {
+            // For each .in file, process them
             DirectoryInfo d = new DirectoryInfo(".");
             foreach (FileInfo f in d.GetFiles("*.in"))
             {
                 MainProg(f.FullName);
             }
+            // Wait for key
             Console.ReadLine();
         } 
         static void MainProg(string inFile)
@@ -92,7 +94,7 @@ namespace HashCode
             }
 
             // Show How many available
-            Console.WriteLine(String.Join(" ",teams));
+            if(debug) Console.WriteLine(String.Join(" ",teams));
             if (totalMembers > pizzas.Count)
             {
                 Console.WriteLine($"\nOnly {pizzas.Count} pizza available. ");
