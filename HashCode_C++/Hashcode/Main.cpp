@@ -3,8 +3,14 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
+
+int toInt(string s);
+int wordLength(string s);
+int getIntersect(string s1[], string s2[], int len1, int len2);
+string* arrayConcat(string s1[], string s2[], int len1, int len2);
 class stringGen {
 public:
 	string str, delim;
@@ -29,6 +35,7 @@ public:
 	string* ings;
 	int origIndex;
 	int length;
+	bool expired = false;
 	Pizza(string* Ingredients,int Length,int Index) {
 		ings = Ingredients;
 		origIndex = Index;
@@ -36,14 +43,65 @@ public:
 	}
 };
 
-int toInt(string s);
-int wordLength(string s);
-int getIntersect(string s1[], string s2[], int len1, int len2);
-string* arrayConcat(string s1[], string s2[], int len1, int len2);
+class pizzaGen {
+public:
+	vector<Pizza> pVector;
+	string* unionArray;
+	int uArrayLen = 0,min_intersect = -1,nextIndex = 0;
+	bool flag_a = false;
+	int getNext() {
+		return pVector.size();
+		//int return_;
+		/*if (!flag_a) {
+			flag_a = true;
+			unionArray = new string[pVector[0].length];
+			unionArray = pVector[0].ings;
+			return_ = pVector[0].origIndex;
+			pVector.erase(pVector.begin());
+			return return_;
+		}
+		else
+		{
+			for (int i = 0; i < pVector.size(); i++) {
+				int intersect = getIntersect(unionArray, pVector[i].ings, uArrayLen, pVector[i].length);
+				if (min_intersect == -1) {
+					min_intersect = intersect;
+					if (intersect == 0) {
+						return_ = pVector[0].origIndex;
+						pVector.erase(pVector.begin());
+						return return_;
+					}
+					continue;
+				}
+				if (intersect == 0) {
+					return_ = pVector[i].origIndex;
+					pVector.erase(pVector.begin() + i);
+					return return_;
+				}
+				else if (intersect < min_intersect) {
+					min_intersect = intersect;
+					nextIndex = i;
+				}
+			}
+			if (pVector.size() == 1) {
+				return_ = pVector[0].origIndex;
+				pVector.erase(pVector.begin());
+				return return_;
+			}
+			return_ = pVector[nextIndex].origIndex;
+			pVector.erase(pVector.begin() + nextIndex);
+			return return_;
+		*/
+	}
+	void reset() {
+		unionArray = NULL;
+	}
+};
+
 int main() {
 	cout << "Started" << endl;
 	ifstream TestFile("d_many_pizzas.in");
-	ofstream outputFile("out.txt");
+	ofstream outputFile("out.out");
 	vector<Pizza> pizzaVector;
 	string text;
 	int args[4];
@@ -80,35 +138,32 @@ int main() {
 	TestFile.close();
 	
 	//Sort the Pizza
-	int pizzaArray [100000];
-	int k = 0;
-	for (int i = max_ing; i >= 0; i--) {
-		for (int j = 0; j < pizzaVector.size(); j++) {
-			if (pizzaVector[j].length == i) {
-				pizzaArray[k] = j;
-				k++;
-			}
-		}
-	}
+	std::sort(pizzaVector.begin(), pizzaVector.end(), [](const Pizza& p1, const Pizza& p2) { return p1.length < p2.length; });
 
-	for (int i = 0 ; i < k; i++) {
-		outputFile << pizzaVector[pizzaArray[i]].origIndex << " " << pizzaVector[pizzaArray[i]].length << " ";
-		for (int j = 0; j < pizzaVector[pizzaArray[i]].length; j++) {
-			outputFile << pizzaVector[pizzaArray[i]].ings[j] << " ";
+	cout << endl;
+	pizzaGen pGenerator(pizzaVector);
+	for (int i = 0; i < 4; i++) {
+		cout << pGenerator.getNext() + " ";
+	}
+	
+	//Debug write to file
+	for (int i = 0 ; i < pizzaVector.size(); i++) {
+		outputFile << pizzaVector[i].origIndex << " " << pizzaVector[i].length << " ";
+		for (int j = 0; j < pizzaVector[i].length; j++) {
+			outputFile << pizzaVector[i].ings[j] << " ";
 		}
 		outputFile << endl;
 	}
 
-	string a1[] = { "lol","num","sex" };
-	string a2[] = { "lol","nul","num" };
+	/*string a1[] = { "lol","num","sex" };
+	string a2[] = { "lol","nul","num" };*/
 
-	string* tot = arrayConcat(pizzaVector[pizzaArray[0]].ings, pizzaVector[pizzaArray[1]].ings, pizzaVector[pizzaArray[0]].length, pizzaVector[pizzaArray[1]].length);
-	for (int i = 0; i < pizzaVector[pizzaArray[0]].length + pizzaVector[pizzaArray[1]].length; i++) {
+	//string* tot = arrayConcat(pizzaVector[pizzaArray[0]].ings, pizzaVector[pizzaArray[1]].ings, pizzaVector[pizzaArray[0]].length, pizzaVector[pizzaArray[1]].length);
+	/*for (int i = 0; i < pizzaVector[pizzaArray[0]].length + pizzaVector[pizzaArray[1]].length; i++) {
 		cout << tot[i] + " ";
-	}
-	cout << tot->length();
-	cout << endl;
-	cout << getIntersect(pizzaVector[pizzaArray[1]].ings, pizzaVector[pizzaArray[0]].ings, pizzaVector[pizzaArray[1]].length, pizzaVector[pizzaArray[0]].length) << endl;
+	}*/
+	/*cout << endl;
+	cout << getIntersect(pizzaVector[pizzaArray[1]].ings, pizzaVector[pizzaArray[0]].ings, pizzaVector[pizzaArray[1]].length, pizzaVector[pizzaArray[0]].length) << endl;*/
 	/*TestFile.clear();
 	cout << "\n\n";
 	TestFile.seekg(0, ios::beg);
@@ -153,6 +208,7 @@ int getIntersect(string s1[], string s2[], int len1, int len2) {
 	return count;
 }
 
+//Concatenate 2 string arrays
 string* arrayConcat(string s1[], string s2[], int len1, int len2) {
 	string* tot = new string[len1 + len2];
 	int i, j;
@@ -164,3 +220,4 @@ string* arrayConcat(string s1[], string s2[], int len1, int len2) {
 	}
 	return tot;
 }
+

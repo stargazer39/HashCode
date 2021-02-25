@@ -10,7 +10,7 @@ namespace HashCode
 {
     class Program
     {
-        public static string inFile = "c_many_ingredients.in";
+        public static string inFile = "d_many_pizzas.in";
         static void Main(string[] args_)
         {
             LineReader lr = new LineReader(inFile);
@@ -70,7 +70,7 @@ namespace HashCode
             sw.Close();*/
 
             /// Pizza Selection Begin
-            for(int i = 2; i >= 0; i--)
+            for(int i = 0; i <= 2; i++)
             {
                 for(int j = 0; j < teams[i]; j++)
                 {
