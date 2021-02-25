@@ -10,11 +10,20 @@ namespace HashCode
 {
     class Program
     {
-        public static string inFile = "d_many_pizzas.in";
+        private static bool debug = false;
         static void Main(string[] args_)
+        {
+            DirectoryInfo d = new DirectoryInfo(".");
+            foreach (FileInfo f in d.GetFiles("*.in"))
+            {
+                MainProg(f.FullName);
+            }
+        } 
+        static void MainProg(string inFile)
         {
             LineReader lr = new LineReader(inFile);
             StreamWriter sw = new StreamWriter($"{inFile.Split('.')[0]}.out");
+            Console.WriteLine(inFile.Split('.')[0]);
             string[] args = lr.Next().Split(' ');
             int[] teams = new int[3];
             int totalMembers = 0;
@@ -70,8 +79,19 @@ namespace HashCode
             sw.Close();*/
 
             /// Pizza Selection Begin
-            for(int i = 0; i <= 2; i++)
+            //for(int i = 0; i <= 2; i++)
+            int[] pizzaDelivered = { 0,0,0 };
+            while (true)
             {
+                if (teams.Length == 0) break;
+                int max = teams.Max();
+                int i = Array.IndexOf(teams, max);
+                if (teams[i] == 0)
+                {
+                    break;
+                }
+                Console.WriteLine(i);
+                Console.WriteLine(String.Join("|", teams));
                 for(int j = 0; j < teams[i]; j++)
                 {
                     if (newPizzas.Count < i + 2) break;
@@ -83,12 +103,14 @@ namespace HashCode
                     {
                         //sw.Write($"{p.index} ");
                         tmp += $"{p.index} ";
-                        Console.WriteLine($"{p.index} {String.Join(" ", p.ingredients)}");
+                        if(debug) Console.WriteLine($"{p.index} {String.Join(" ", p.ingredients)}");
                     }
                     output.Add(tmp);
+                    pizzaDelivered[i] += pizz.Count;
                     //sw.Write("\n");
-                    Console.WriteLine("\n");
+                    if(debug) Console.WriteLine("\n");
                 }
+                teams[i] = 0;
             }
             sw.WriteLine(output.Count);
             foreach(string str in output)
@@ -98,6 +120,10 @@ namespace HashCode
             sw.Flush();
             sw.Close();
 
+            for(int k = 0; k < 3; k++)
+            {
+                Console.WriteLine("Delivered " + pizzaDelivered[k] + " to " + (k+2) + " member teams.");
+            }
             /* Console.WriteLine("\n");
              Debug.WriteLine(newPizzas.Count);
              pizz = PizzaMaker(2, newPizzas);
@@ -105,10 +131,10 @@ namespace HashCode
              {
                  Console.WriteLine($"{p.index} {String.Join(" ", p.ingredients)}");
              }*/
-            Console.WriteLine("Done.");
+            Console.WriteLine("Done.\n");
             //Console.WriteLine($"{newPizzas[0].index},{next.index} {String.Join(" ", newPizzas[0].ingredients)} // {String.Join(" ", next.ingredients)}");
             //for(int i = 0; i < newPizzas.Count())
-            Console.ReadLine();
+            //Console.ReadLine();
         }
         public static Pizza UniquePizza(List<Pizza> pizzaList,Pizza pizzaCompare)
         {
@@ -123,7 +149,7 @@ namespace HashCode
                     intersect_length = intersect_ingredients.Length;
                     continue;
                 }
-                if(intersect_length > intersect_ingredients.Length)
+                if(intersect_length >= intersect_ingredients.Length)
                 {
                     next_pizza = pizzaList[i];
                     next_index = i;
